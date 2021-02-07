@@ -7,14 +7,14 @@ public class PhoneContact {
     private static Map<Integer, String> contact = new TreeMap<>();
 
 
-    static public void add(Integer i, String s) {
-        contact.put(i, s);
+    static public void add(Integer number, String name) {
+        contact.put(number, name);
     }
 
-    static public void get(String s) {
+    static public void get(String name) {
         for (Map.Entry<Integer, String> entry : contact.entrySet()) {
-            if (entry.getValue().equals(s)) {
-                System.out.println("Найден контакт : " + s + " номер :" + entry.getKey());
+            if (entry.getValue().equals(name)) {
+                System.out.println("Найден контакт : " + name + " номер :" + entry.getKey());
             }
         }
     }
