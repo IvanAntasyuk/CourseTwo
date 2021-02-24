@@ -26,35 +26,48 @@ public class MyServer {
                 System.out.println("Севрвер ожидает подключения");
                 Socket socket = server.accept();
                 System.out.println("Клиент подключился");
-                new ClientHandler(this,socket);
+                new ClientHandler(this, socket);
             }
 
         } catch (IOException e) {
             System.out.println("Сервер рухнул");
-        }finally {
-            if (authService!=null){
+        } finally {
+            if (authService != null) {
                 authService.stop();
             }
         }
     }
-    public synchronized void broadcastMessage(String message){
-        for (ClientHandler c : clients){
+
+    public synchronized void broadcastMessage(String message) {
+        for (ClientHandler c : clients) {
             c.sendMessage(message);
         }
     }
-    public synchronized void subscribe(ClientHandler client){
+
+    public synchronized void sendMassageToCertainUser(ClientHandler from,String toWhom, String message) {
+        for (ClientHandler c : clients) {
+          if (c.getName().equals(toWhom)){
+              c.sendMessage(message);
+              from.sendMessage(message);
+          }
+        }
+    }
+
+    public synchronized void subscribe(ClientHandler client) {
         clients.add(client);
     }
-    public synchronized void unsubscribe(ClientHandler client){
+
+    public synchronized void unsubscribe(ClientHandler client) {
         clients.remove(client);
     }
 
     public boolean isNickBusy(String nick) {
-        for (ClientHandler c : clients){
-            if (c.getName().equals(nick)){
+        for (ClientHandler c : clients) {
+            if (c.getName().equals(nick)) {
                 return true;
             }
         }
         return false;
     }
+
 }

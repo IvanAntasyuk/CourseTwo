@@ -53,9 +53,9 @@ public class ClientHandler {
         } catch (IOException ignored) {
 
         }
-        try{
+        try {
             socket.close();
-        }catch (IOException ignored){
+        } catch (IOException ignored) {
 
         }
     }
@@ -64,10 +64,18 @@ public class ClientHandler {
         while (true) {
             String messageFromClient = dis.readUTF();
             System.out.println(name + " send message " + messageFromClient);
-            if (messageFromClient.equalsIgnoreCase("/end")) {
-                return;
+            if (messageFromClient.trim().startsWith("/")) {
+                if (messageFromClient.startsWith("/w")) {
+                    String message[] = messageFromClient.split(" ", 3);
+                    myServer.sendMassageToCertainUser(this, message[1], name + " :" + message[2]);
+                }
+                if (messageFromClient.equalsIgnoreCase("/end")) {
+                    return;
+                }
+            } else {
+
+                myServer.broadcastMessage(name + ": " + messageFromClient);
             }
-            myServer.broadcastMessage(name + ": " + messageFromClient);
         }
     }
 
@@ -89,7 +97,7 @@ public class ClientHandler {
                         .getNickbyLoginandPassword(arr[1], arr[2]);
                 if (nick != null) {
                     if (!myServer.isNickBusy(nick)) {
-                        sendMessage("authok " + nick);
+                        sendMessage("Client login :  " + nick);
                         name = nick;
                         myServer.broadcastMessage("Hello " + name);
                         myServer.subscribe(this);
